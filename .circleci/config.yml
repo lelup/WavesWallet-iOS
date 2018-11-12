@@ -57,3 +57,6 @@ workflows:
   sakura:
     jobs:
       - rocketjump
+          filters:
+            branches:
+               only: develop
