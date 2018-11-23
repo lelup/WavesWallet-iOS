@@ -8,6 +8,7 @@ PODS:
   - Charts/Core (3.1.1)
   - Crashlytics (3.10.7):
     - Fabric (~> 1.7.11)
+  - CryptoJS (0.1)
   - CryptoSwift (0.11.0)
   - CSV.swift (2.2.1)
   - Device.swift (1.1.2)
@@ -149,6 +150,7 @@ DEPENDENCIES:
   - blake2 (from `Vendors/Blake2`)
   - Charts (~> 3.1.1)
   - Crashlytics
+  - CryptoJS (from `Vendors/CryptoJS`)
   - CryptoSwift
   - CSV.swift
   - Device.swift (from `https://github.com/schickling/Device.swift.git`, branch `swift-4.2`)
@@ -255,6 +257,8 @@ EXTERNAL SOURCES:
     :path: Vendors/Base58
   blake2:
     :path: Vendors/Blake2
+  CryptoJS:
+    :path: Vendors/CryptoJS
   Device.swift:
     :branch: swift-4.2
     :git: https://github.com/schickling/Device.swift.git
@@ -291,6 +295,7 @@ SPEC CHECKSUMS:
   blake2: b767add912ed9f7ded789bf257d3c6081ed10ec0
   Charts: 90a4d61da0f6e06684c591e3bcab11940fe61736
   Crashlytics: ccaac42660eb9351b9960c0d66106b0bcf99f4fa
+  CryptoJS: 0c93f74d312a83fdd777434980e9ba49ac31db83
   CryptoSwift: ad5208dd2aae0a764ea4ce2c2d34bd067cae67f0
   CSV.swift: 5bf3338aff82371cb51cc6dc559d7b45a74bab14
   Device.swift: a8c9f6ee3b0a9ee85764bf07461c163b9e95c94c
@@ -347,6 +352,6 @@ SPEC CHECKSUMS:
   "UITextView+Placeholder": 0c3efd97f37ea64bde7f34cc6e90fe02e87b3909
   UPCarouselFlowLayout: 4c7d2c43a10ebb1597bde502a53699d378341dad
 
-PODFILE CHECKSUM: 0370be91c33df8259d86a988f3b946172d7aafec
+PODFILE CHECKSUM: e74f8c6d1adba3238bd567c07c494e1c1e3da1de
 
 COCOAPODS: 1.5.3

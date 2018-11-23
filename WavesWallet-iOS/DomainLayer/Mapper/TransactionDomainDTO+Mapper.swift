@@ -225,15 +225,15 @@ extension DomainLayer.DTO.BurnTransaction {
         let totalHeight: Int64 = metaData.totalHeight
 
         guard let asset = assets[self.assetId] else {
-            error("MassTransferTransaction Not found Asset ID")
+            error("BurnTransaction Not found Asset ID")
             return nil
         }
         guard let sender = accounts[self.sender] else {
-            error("MassTransferTransaction Not found Sender ID")
+            error("BurnTransaction Not found Sender ID")
             return nil
         }
         guard let wavesAsset = assets[GlobalConstants.wavesAssetId] else {
-            error("MassTransferTransaction Not found Waves ID")
+            error("BurnTransaction Not found Waves ID")
             return nil
         }
         let balance = asset.balance(self.amount)
