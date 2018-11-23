@@ -1,119 +1,139 @@
-(function () {
-    // Shortcuts
-    var C = CryptoJS;
-    var C_lib = C.lib;
-    var StreamCipher = C_lib.StreamCipher;
-    var C_algo = C.algo;
+;(function (root, factory, undef) {
+	if (typeof exports === "object") {
+		// CommonJS
+		module.exports = exports = factory(require("./core"), require("./enc-base64"), require("./md5"), require("./evpkdf"), require("./cipher-core"));
+	}
+	else if (typeof define === "function" && define.amd) {
+		// AMD
+		define(["./core", "./enc-base64", "./md5", "./evpkdf", "./cipher-core"], factory);
+	}
+	else {
+		// Global (browser)
+		factory(root.CryptoJS);
+	}
+}(this, function (CryptoJS) {
 
-    /**
-     * RC4 stream cipher algorithm.
-     */
-    var RC4 = C_algo.RC4 = StreamCipher.extend({
-        _doReset: function () {
-            // Shortcuts
-            var key = this._key;
-            var keyWords = key.words;
-            var keySigBytes = key.sigBytes;
+	(function () {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var StreamCipher = C_lib.StreamCipher;
+	    var C_algo = C.algo;
 
-            // Init sbox
-            var S = this._S = [];
-            for (var i = 0; i < 256; i++) {
-                S[i] = i;
-            }
+	    /**
+	     * RC4 stream cipher algorithm.
+	     */
+	    var RC4 = C_algo.RC4 = StreamCipher.extend({
+	        _doReset: function () {
+	            // Shortcuts
+	            var key = this._key;
+	            var keyWords = key.words;
+	            var keySigBytes = key.sigBytes;
 
-            // Key setup
-            for (var i = 0, j = 0; i < 256; i++) {
-                var keyByteIndex = i % keySigBytes;
-                var keyByte = (keyWords[keyByteIndex >>> 2] >>> (24 - (keyByteIndex % 4) * 8)) & 0xff;
+	            // Init sbox
+	            var S = this._S = [];
+	            for (var i = 0; i < 256; i++) {
+	                S[i] = i;
+	            }
 
-                j = (j + S[i] + keyByte) % 256;
+	            // Key setup
+	            for (var i = 0, j = 0; i < 256; i++) {
+	                var keyByteIndex = i % keySigBytes;
+	                var keyByte = (keyWords[keyByteIndex >>> 2] >>> (24 - (keyByteIndex % 4) * 8)) & 0xff;
 
-                // Swap
-                var t = S[i];
-                S[i] = S[j];
-                S[j] = t;
-            }
+	                j = (j + S[i] + keyByte) % 256;
 
-            // Counters
-            this._i = this._j = 0;
-        },
+	                // Swap
+	                var t = S[i];
+	                S[i] = S[j];
+	                S[j] = t;
+	            }
 
-        _doProcessBlock: function (M, offset) {
-            M[offset] ^= generateKeystreamWord.call(this);
-        },
+	            // Counters
+	            this._i = this._j = 0;
+	        },
 
-        keySize: 256/32,
+	        _doProcessBlock: function (M, offset) {
+	            M[offset] ^= generateKeystreamWord.call(this);
+	        },
 
-        ivSize: 0
-    });
+	        keySize: 256/32,
 
-    function generateKeystreamWord() {
-        // Shortcuts
-        var S = this._S;
-        var i = this._i;
-        var j = this._j;
+	        ivSize: 0
+	    });
 
-        // Generate keystream word
-        var keystreamWord = 0;
-        for (var n = 0; n < 4; n++) {
-            i = (i + 1) % 256;
-            j = (j + S[i]) % 256;
+	    function generateKeystreamWord() {
+	        // Shortcuts
+	        var S = this._S;
+	        var i = this._i;
+	        var j = this._j;
 
-            // Swap
-            var t = S[i];
-            S[i] = S[j];
-            S[j] = t;
+	        // Generate keystream word
+	        var keystreamWord = 0;
+	        for (var n = 0; n < 4; n++) {
+	            i = (i + 1) % 256;
+	            j = (j + S[i]) % 256;
 
-            keystreamWord |= S[(S[i] + S[j]) % 256] << (24 - n * 8);
-        }
+	            // Swap
+	            var t = S[i];
+	            S[i] = S[j];
+	            S[j] = t;
 
-        // Update counters
-        this._i = i;
-        this._j = j;
+	            keystreamWord |= S[(S[i] + S[j]) % 256] << (24 - n * 8);
+	        }
 
-        return keystreamWord;
-    }
+	        // Update counters
+	        this._i = i;
+	        this._j = j;
 
-    /**
-     * Shortcut functions to the cipher's object interface.
-     *
-     * @example
-     *
-     *     var ciphertext = CryptoJS.RC4.encrypt(message, key, cfg);
-     *     var plaintext  = CryptoJS.RC4.decrypt(ciphertext, key, cfg);
-     */
-    C.RC4 = StreamCipher._createHelper(RC4);
+	        return keystreamWord;
+	    }
 
-    /**
-     * Modified RC4 stream cipher algorithm.
-     */
-    var RC4Drop = C_algo.RC4Drop = RC4.extend({
-        /**
-         * Configuration options.
-         *
-         * @property {number} drop The number of keystream words to drop. Default 192
-         */
-        cfg: RC4.cfg.extend({
-            drop: 192
-        }),
+	    /**
+	     * Shortcut functions to the cipher's object interface.
+	     *
+	     * @example
+	     *
+	     *     var ciphertext = CryptoJS.RC4.encrypt(message, key, cfg);
+	     *     var plaintext  = CryptoJS.RC4.decrypt(ciphertext, key, cfg);
+	     */
+	    C.RC4 = StreamCipher._createHelper(RC4);
 
-        _doReset: function () {
-            RC4._doReset.call(this);
+	    /**
+	     * Modified RC4 stream cipher algorithm.
+	     */
+	    var RC4Drop = C_algo.RC4Drop = RC4.extend({
+	        /**
+	         * Configuration options.
+	         *
+	         * @property {number} drop The number of keystream words to drop. Default 192
+	         */
+	        cfg: RC4.cfg.extend({
+	            drop: 192
+	        }),
 
-            // Drop
-            for (var i = this.cfg.drop; i > 0; i--) {
-                generateKeystreamWord.call(this);
-            }
-        }
-    });
+	        _doReset: function () {
+	            RC4._doReset.call(this);
 
-    /**
-     * Shortcut functions to the cipher's object interface.
-     *
-     * @example
-     *
-     *     var ciphertext = CryptoJS.RC4Drop.encrypt(message, key, cfg);
-     *     var plaintext  = CryptoJS.RC4Drop.decrypt(ciphertext, key, cfg);
-     */
-    C.RC4Drop = StreamCipher._createHelper(RC4Drop);
-}());
+	            // Drop
+	            for (var i = this.cfg.drop; i > 0; i--) {
+	                generateKeystreamWord.call(this);
+	            }
+	        }
+	    });
+
+	    /**
+	     * Shortcut functions to the cipher's object interface.
+	     *
+	     * @example
+	     *
+	     *     var ciphertext = CryptoJS.RC4Drop.encrypt(message, key, cfg);
+	     *     var plaintext  = CryptoJS.RC4Drop.decrypt(ciphertext, key, cfg);
+	     */
+	    C.RC4Drop = StreamCipher._createHelper(RC4Drop);
+	}());
+
+
+	return CryptoJS.RC4;
+
+}));

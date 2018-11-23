@@ -61,7 +61,7 @@ target 'WavesWallet-iOS' do
     pod 'base58', :path => 'Vendors/Base58'
     pod 'keccak', :path => 'Vendors/Keccak'
     pod 'blake2', :path => 'Vendors/Blake2'
-	pod 'CryptoJS', :path => 'Vendors/CryptoJS'
+
     pod 'CryptoSwift'
 
     pod 'KeychainAccess'

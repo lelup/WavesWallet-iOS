@@ -1,34 +1,54 @@
-/**
- * Output Feedback block mode.
- */
-CryptoJS.mode.OFB = (function () {
-    var OFB = CryptoJS.lib.BlockCipherMode.extend();
+;(function (root, factory, undef) {
+	if (typeof exports === "object") {
+		// CommonJS
+		module.exports = exports = factory(require("./core"), require("./cipher-core"));
+	}
+	else if (typeof define === "function" && define.amd) {
+		// AMD
+		define(["./core", "./cipher-core"], factory);
+	}
+	else {
+		// Global (browser)
+		factory(root.CryptoJS);
+	}
+}(this, function (CryptoJS) {
 
-    var Encryptor = OFB.Encryptor = OFB.extend({
-        processBlock: function (words, offset) {
-            // Shortcuts
-            var cipher = this._cipher
-            var blockSize = cipher.blockSize;
-            var iv = this._iv;
-            var keystream = this._keystream;
+	/**
+	 * Output Feedback block mode.
+	 */
+	CryptoJS.mode.OFB = (function () {
+	    var OFB = CryptoJS.lib.BlockCipherMode.extend();
 
-            // Generate keystream
-            if (iv) {
-                keystream = this._keystream = iv.slice(0);
+	    var Encryptor = OFB.Encryptor = OFB.extend({
+	        processBlock: function (words, offset) {
+	            // Shortcuts
+	            var cipher = this._cipher
+	            var blockSize = cipher.blockSize;
+	            var iv = this._iv;
+	            var keystream = this._keystream;
 
-                // Remove IV for subsequent blocks
-                this._iv = undefined;
-            }
-            cipher.encryptBlock(keystream, 0);
+	            // Generate keystream
+	            if (iv) {
+	                keystream = this._keystream = iv.slice(0);
 
-            // Encrypt
-            for (var i = 0; i < blockSize; i++) {
-                words[offset + i] ^= keystream[i];
-            }
-        }
-    });
+	                // Remove IV for subsequent blocks
+	                this._iv = undefined;
+	            }
+	            cipher.encryptBlock(keystream, 0);
 
-    OFB.Decryptor = Encryptor;
+	            // Encrypt
+	            for (var i = 0; i < blockSize; i++) {
+	                words[offset + i] ^= keystream[i];
+	            }
+	        }
+	    });
 
-    return OFB;
-}());
+	    OFB.Decryptor = Encryptor;
+
+	    return OFB;
+	}());
+
+
+	return CryptoJS.mode.OFB;
+
+}));

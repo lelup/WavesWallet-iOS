@@ -16,7 +16,7 @@ import FirebaseCore
 import FirebaseDatabase
 import Fabric
 import Crashlytics
-import CryptoJS
+//import CryptoJS
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

@@ -17,7 +17,7 @@ public class CryptoJS{
             super.init()
 
             // Retrieve the content of aes.js
-            let cryptoJSpath = Bundle(for: BundleToken.self).path(forResource: "aes", ofType: "js")
+            let cryptoJSpath = Bundle.main.path(forResource: "crypto-js", ofType: "js")
 
             if cryptoJSpath != nil {
 
@@ -26,11 +26,13 @@ public class CryptoJS{
                     print("Loaded aes.js")
 
                     // Evaluate aes.js
-                    _ = cryptoJScontext?.evaluateScript(cryptoJS)
+                    let values = cryptoJScontext?.evaluateScript(cryptoJS)
 
                     // Reference functions
-                    encryptFunction = cryptoJScontext?.objectForKeyedSubscript("encrypt")
-                    decryptFunction = cryptoJScontext?.objectForKeyedSubscript("decrypt")
+//                    *     var ciphertext = CryptoJS.AES.encrypt(message, key, cfg);
+//                    *     var plaintext  = CryptoJS.AES.decrypt(ciphertext, key, cfg);
+                    encryptFunction = cryptoJScontext?.objectForKeyedSubscript("CryptoJS.AES.encrypt")
+                    decryptFunction = cryptoJScontext?.objectForKeyedSubscript("CryptoJS.AES.decrypt")
                 } catch {
                     print("Unable to load aes.js")
                 }

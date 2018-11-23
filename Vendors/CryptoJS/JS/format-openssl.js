@@ -13,18 +13,6 @@
 	}
 }(this, function (CryptoJS) {
 
-	/**
-	 * A noop padding strategy.
-	 */
-	CryptoJS.pad.NoPadding = {
-	    pad: function () {
-	    },
-
-	    unpad: function () {
-	    }
-	};
-
-
-	return CryptoJS.pad.NoPadding;
+	return CryptoJS.format.OpenSSL;
 
 }));
